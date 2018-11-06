@@ -1,0 +1,8 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block content %}
+{% for c in categories %}
+	<a href="{% url "shop:category_update" c.slug %}">{{c.name}}</a>
+{% endfor %}
+{% endblock %}
