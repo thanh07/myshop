@@ -13,4 +13,5 @@ path('product/<slug:category_slug>/', views.product_list,name='product_list_by_c
 path('product/new', views.product_new, name='product_new'),
 # path('product/<slug:slug>/', views.product_detail, name='product_detail'),
 path('product/update/<slug:slug>/', views.product_update, name='product_update'),
+path('product/delete/<slug:slug>/', views.product_delete, name='product_delete'),
 ]
