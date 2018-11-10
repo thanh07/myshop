@@ -3,6 +3,7 @@ from .models import Category, Product
 from django.forms import ModelForm
 from django.forms import DateTimeField
 
+import sys
 
 
 class CategoryForm(ModelForm):
@@ -16,7 +17,12 @@ class ProductForm(ModelForm):
 		fields = ['name', 'slug','category','image','description','purchase','wholesale','block_price',
 		'retail','available',]
 
-
+class ProductUpdateForm(object):
+	"""docstring for ProductUpdateForm"""
+	def __init__(self, arg):
+		super(ProductUpdateForm, self).__init__()
+		self.arg = arg
+		
 	 # start_date  = forms.DateField(widget=DateTextInput(format='d/m/y'), input_formats=('%d/%m/%y',))
 
 # Create your views here.
@@ -60,6 +66,7 @@ def product_new(request):
 			p = form.save(commit=False)
 			p.image = request.FILES['image']
 			p.save()
+			return redirect('shop:product_list')
 	else:
 		form = ProductForm()
 	return render(request,'shop/product/form.html',{'form':form})
@@ -70,20 +77,17 @@ def product_new(request):
 
 def product_update(request,slug):
 	product = get_object_or_404(Product, slug = slug)
-	form = ProductForm(request.POST or None, instance = product)
+	form = ProductForm(request.POST or None,
+						request.FILES or None,
+						instance = product)
 	if form.is_valid():
-		p = form.save(commit=False)
-		p.image = request.FILES['image']
+		p = form.save(commit = False)
 		p.save()
 		return redirect('shop:product_list')
+	else:
+		form = ProductForm(instance = product)
 	return render(request, 'shop/product/form.html',{'form':form})
-	# product = get_object_or_404(Product, slug = slug)
-	# form = ProductForm(request.POST or None, instance = product)
-	# if form.is_valid():
-	# 	p = form.save(commit = False)
-	# 	p.save()
-	# 	return redirect('shop:product_list')
-	# return render(request, 'shop/product/form.html',{'form':form})
+
 def product_delete(request,slug):
 	product = get_object_or_404(Product, slug = slug)
 	
